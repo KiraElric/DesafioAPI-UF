@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  username: MyString
+  uf_value: 1.5
+  date_requested: 2020-09-07
+
+two:
+  username: MyString
+  uf_value: 1.5
+  date_requested: 2020-09-07
