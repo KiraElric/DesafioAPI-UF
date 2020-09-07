@@ -38,6 +38,25 @@ class ConsultsController < ApplicationController
     @consult.destroy
   end
 
+
+  def getUF
+    
+  end
+
+  def usage
+    if request.headers['x-cliente']==params[:name]
+      @consult = Consult.where('username = ?', params[:name])
+      if @consult
+        consult_count = @consult.size
+        render json: { user: params[:name], usage: consult_count }, status: :ok
+      else
+        render json: {error: "usuario no existe o no tiene data de uso"}, status: :unprocessable_entity
+      end
+    else
+      render json: {error: "no tiene permitido solicitar datos de otros usuarios"}, status: :unauthorized
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_consult
