@@ -40,7 +40,23 @@ class ConsultsController < ApplicationController
 
 
   def getUF
-    
+    if request.headers['x-cliente']
+      date = params[:date]
+      if date.match('^\d{4}\-\d{2}\-\d{2}$')
+        value = Historical.where('uf_date = ?', date).uf_value
+        user = request.headers['x-cliente']
+        if value
+          @consult = Consult.create(username: user, uf_value: value, date_requested: date)
+          render json: {value: value}, status: :ok
+        else
+          render json: {error: "fecha invalida, no existe valor registrado de uf para esta."}, status: :not_found
+        end
+      else
+        render json: {error: "el formato ingresado no coincide con una fecha"}, status: :unprocessable_entity
+      end
+    else
+      render json: {error: "no tiene permitido solicitar datos de otros usuarios"}, status: :unauthorized
+    end
   end
 
   def usage
