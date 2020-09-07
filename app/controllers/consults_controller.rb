@@ -43,11 +43,12 @@ class ConsultsController < ApplicationController
     if request.headers['x-cliente']
       date = params[:date]
       if date.match('^\d{4}\-\d{2}\-\d{2}$')
-        value = Historical.where('uf_date = ?', date).uf_value
+        historic = Historical.where('uf_date = ?', date)
         user = request.headers['x-cliente']
-        if value
-          @consult = Consult.create(username: user, uf_value: value, date_requested: date)
-          render json: {value: value}, status: :ok
+        if historic
+          value_date = historic[0][:uf_value]
+          @consult = Consult.create(username: user, uf_value: value_date, date_requested: date)
+          render json: {value: value_date}, status: :ok
         else
           render json: {error: "fecha invalida, no existe valor registrado de uf para esta."}, status: :not_found
         end
